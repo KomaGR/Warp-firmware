@@ -2979,14 +2979,20 @@ main(void)
 				{
 					WarpStatus 	status;
 					uint8_t		buf[32] = {0};
+					int		byteCount;
+
+					warpPrint("\r\n\tNumber of bytes (e.g., '0001', max '0032')> ");
+					byteCount = read4digits();
 					
-					for (size_t i = 0; i < 32; i++)
+					for (size_t i = 0; i < MIN(byteCount, 32); i++)
 					{
-						buf[i] = i;
+						
+						warpPrint("\r\n\tByte #%d (e.g., 'F0')> ", i);
+						buf[i] = readHexByte();
 					}
 					
 
-					status = programPageIS25xP(0, 32, buf);
+					status = programPageIS25xP(0, MIN(byteCount, 32), buf);
 					if (status != kWarpStatusOK)
 					{
 						warpPrint("\r\n\tCommunication failed: %d", status);
